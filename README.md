@@ -1,59 +1,171 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# First Website
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Full-stack web application built with **Laravel** (backend API), **SvelteKit** (frontend), **Tailwind CSS** (styling), and **MySQL** (database). Runs on Docker via Laravel Sail.
 
-## About Laravel
+## Tech Stack
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+| Layer | Technology |
+|-------|------------|
+| Backend / API | Laravel (PHP) |
+| Frontend | SvelteKit |
+| Styling | Tailwind CSS |
+| Database | MySQL 8.4 |
+| Dev Environment | Docker (Laravel Sail) |
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Project Structure
 
-## Learning Laravel
+```
+firstwebsite/
+│
+├── app/                        # ⚙️ BACKEND — PHP application code
+│   ├── Http/
+│   │   └── Controllers/        #   Route handlers (business logic)
+│   ├── Models/                  #   Eloquent models (DB tables as PHP classes)
+│   └── Providers/               #   Service providers (app bootstrapping)
+│
+├── routes/                     # 🔀 ROUTING
+│   ├── web.php                  #   Web routes (returns HTML/views)
+│   └── api.php                  #   API routes (returns JSON, used by SvelteKit)
+│
+├── database/                   # 🗄️ DATABASE
+│   ├── migrations/              #   Table definitions (create/alter tables)
+│   ├── seeders/                 #   Seed data (populate tables with test data)
+│   └── factories/               #   Model factories (generate fake data for testing)
+│
+├── resources/                  # 🎨 LARAVEL FRONTEND (Blade templates, can be replaced by SvelteKit)
+│   ├── views/                   #   Blade templates (.blade.php)
+│   ├── css/                     #   CSS source files
+│   └── js/                      #   JavaScript source files
+│
+├── frontend/                   # 🖥️ SVELTEKIT FRONTEND (to be created)
+│   ├── src/
+│   │   ├── routes/              #   SvelteKit pages & layouts
+│   │   ├── lib/                 #   Shared components & utilities
+│   │   └── app.html             #   HTML shell
+│   ├── static/                  #   Static assets (images, fonts)
+│   ├── svelte.config.js         #   SvelteKit configuration
+│   ├── tailwind.config.js       #   Tailwind CSS configuration
+│   └── package.json             #   Node.js dependencies
+│
+├── config/                     # ⚡ CONFIGURATION
+│   ├── database.php             #   Database connection settings
+│   ├── auth.php                 #   Authentication settings
+│   ├── app.php                  #   Application settings
+│   └── ...                      #   Other config files
+│
+├── public/                     # 📁 PUBLIC — Publicly accessible files
+│   └── index.php                #   Laravel entry point
+│
+├── storage/                    # 📦 STORAGE — Logs, cache, compiled views
+│   ├── logs/                    #   Application logs
+│   └── framework/               #   Framework cache & sessions
+│
+├── tests/                      # 🧪 TESTS
+│   ├── Feature/                 #   Feature/integration tests
+│   └── Unit/                    #   Unit tests
+│
+├── compose.yaml                # 🐳 Docker Compose (Laravel Sail)
+├── composer.json                #   PHP dependencies
+├── package.json                 #   Node.js dependencies (root)
+├── vite.config.js               #   Vite build config (for Laravel assets)
+├── artisan                      #   Laravel CLI tool
+└── .env                         #   Environment variables (DB credentials, etc.)
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Where to Write Code
 
-## Laravel Sponsors
+### Backend (Laravel API)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+| Task | Command | File Location |
+|------|---------|---------------|
+| New Controller | `sail artisan make:controller ProductController` | `app/Http/Controllers/` |
+| New Model + Migration | `sail artisan make:model Product -m` | `app/Models/` + `database/migrations/` |
+| New Migration only | `sail artisan make:migration create_products_table` | `database/migrations/` |
+| Add API route | Edit directly | `routes/api.php` |
+| Add web route | Edit directly | `routes/web.php` |
+| New Middleware | `sail artisan make:middleware CheckAdmin` | `app/Http/Middleware/` |
+| New Seeder | `sail artisan make:seeder ProductSeeder` | `database/seeders/` |
 
-### Premium Partners
+### Frontend (SvelteKit + Tailwind CSS)
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+| Task | File Location |
+|------|---------------|
+| New page | `frontend/src/routes/page-name/+page.svelte` |
+| New layout | `frontend/src/routes/+layout.svelte` |
+| Shared component | `frontend/src/lib/components/Button.svelte` |
+| API call to Laravel | `frontend/src/routes/page-name/+page.server.ts` |
+| Tailwind config | `frontend/tailwind.config.js` |
+| Global styles | `frontend/src/app.css` |
 
-## Contributing
+### Database (MySQL)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+| Task | How |
+|------|-----|
+| Create table | `sail artisan make:migration create_products_table` → edit migration file |
+| Modify table | `sail artisan make:migration add_color_to_products_table` → edit migration |
+| Run migrations | `sail artisan migrate` |
+| Rollback | `sail artisan migrate:rollback` |
+| Seed data | `sail artisan db:seed` |
+| Access MySQL CLI | `sail mysql` |
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Getting Started
 
-## Security Vulnerabilities
+```bash
+# 1. Clone the repository
+git clone https://github.com/witshi/firstwebsite.git
+cd firstwebsite
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# 2. Install PHP dependencies
+composer install
 
-## License
+# 3. Copy environment file
+cp .env.example .env
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# 4. Start Docker containers
+./vendor/bin/sail up -d
+
+# 5. Generate application key
+./vendor/bin/sail artisan key:generate
+
+# 6. Run database migrations
+./vendor/bin/sail artisan migrate
+
+# 7. Access the app
+# Laravel: http://localhost
+# SvelteKit: http://localhost:5173 (after setup)
+```
+
+### Useful Sail Commands
+
+```bash
+alias sail='./vendor/bin/sail'
+
+sail up -d          # Start containers in background
+sail down           # Stop containers
+sail artisan ...    # Run artisan commands
+sail composer ...   # Run composer commands
+sail npm ...        # Run npm commands
+sail mysql          # Open MySQL CLI
+sail tinker         # Open PHP REPL
+sail test           # Run tests
+```
+
+---
+
+## Architecture Overview
+
+```
+Browser → SvelteKit (port 5173) → Laravel API (port 80) → MySQL (port 3306)
+              ↑                         ↑                       ↑
+         Tailwind CSS              Eloquent ORM            Migrations
+         Components                Controllers              Seeders
+         Routing                   Middleware
+```
+
+SvelteKit handles the UI and calls Laravel's API endpoints. Laravel processes requests, interacts with MySQL via Eloquent ORM, and returns JSON responses.
