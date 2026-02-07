@@ -114,36 +114,65 @@ firstwebsite/
 
 ---
 
-## Bắt đầu
+## Cài đặt & Chạy dự án
+
+Có 2 cách để chạy dự án. Chọn cách phù hợp với bạn:
+
+---
+
+### Cách 1: Docker + Laravel Sail (khuyến khích)
+
+> Ưu điểm: Môi trường giống nhau cho tất cả mọi người, không lo lỗi "máy tôi chạy được mà".
+> Nhược điểm: Cần cài Docker, tốn RAM hơn.
+
+#### Bước 1: Cài đặt Docker (chỉ làm 1 lần)
+
+**Windows:**
+1. Mở **PowerShell** với quyền **Administrator**, chạy:
+   ```powershell
+   wsl --install
+   ```
+2. **Khởi động lại máy tính**
+3. Tải và cài [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+4. Mở Docker Desktop → vào **Settings** → **General** → đảm bảo **"Use the WSL 2 based engine"** đã được bật
+5. Vào **Settings** → **Resources** → **WSL Integration** → bật distro Ubuntu
+
+**macOS:**
+1. Tải và cài [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+2. Xong.
+
+**Linux:**
+1. Cài Docker Engine theo [hướng dẫn chính thức](https://docs.docker.com/engine/install/)
+
+#### Bước 2: Clone và chạy dự án
 
 ```bash
-# 1. Clone repository
+# Clone repo
 git clone https://github.com/witshi/firstwebsite.git
 cd firstwebsite
 
-# 2. Cài dependencies PHP
-composer install
+# Cài dependencies PHP (chạy trong Docker, không cần cài PHP trên máy)
+docker run --rm -v $(pwd):/var/www/html -w /var/www/html laravelsail/php85-composer:latest composer install --ignore-platform-reqs
 
-# 3. Sao chép file môi trường
+# Sao chép file môi trường
 cp .env.example .env
 
-# 4. Khởi động Docker containers
+# Khởi động containers (Laravel + MySQL)
 ./vendor/bin/sail up -d
 
-# 5. Tạo application key
+# Tạo application key
 ./vendor/bin/sail artisan key:generate
 
-# 6. Chạy database migrations
+# Chạy migrations (tạo bảng trong database)
 ./vendor/bin/sail artisan migrate
 
-# 7. Truy cập ứng dụng
-# Laravel: http://localhost
-# SvelteKit: http://localhost:5173 (sau khi cài đặt)
+# Truy cập: http://localhost
 ```
 
-### Các lệnh Sail thường dùng
+#### Các lệnh Sail thường dùng
 
 ```bash
+# Tạo alias cho tiện (thêm vào ~/.bashrc để không phải gõ lại)
 alias sail='./vendor/bin/sail'
 
 sail up -d          # Khởi động containers ở chế độ nền
@@ -155,6 +184,100 @@ sail mysql          # Mở MySQL CLI
 sail tinker         # Mở PHP REPL (chạy PHP trực tiếp)
 sail test           # Chạy tests
 ```
+
+---
+
+### Cách 2: XAMPP / Laragon (không cần Docker)
+
+> Ưu điểm: Đơn giản, quen thuộc, nhẹ máy.
+> Nhược điểm: Có thể gặp lỗi do khác phiên bản PHP/MySQL giữa các máy.
+
+#### Bước 1: Cài phần mềm cần thiết
+
+1. Cài [XAMPP](https://www.apachefriends.org/) hoặc [Laragon](https://laragon.org/) (khuyến khích Laragon vì dễ dùng hơn)
+2. Cài [Composer](https://getcomposer.org/download/) (quản lý dependencies PHP)
+3. Cài [Git](https://git-scm.com/downloads)
+
+> **Yêu cầu phiên bản:** PHP >= 8.2, MySQL >= 8.0
+
+#### Bước 2: Clone và cấu hình
+
+```bash
+# Clone repo
+git clone https://github.com/witshi/firstwebsite.git
+cd firstwebsite
+
+# Cài dependencies PHP
+composer install
+
+# Sao chép file môi trường
+cp .env.example .env
+```
+
+#### Bước 3: Tạo database
+
+1. Mở **XAMPP Control Panel** → Start **Apache** và **MySQL**
+2. Mở trình duyệt → vào `http://localhost/phpmyadmin`
+3. Tạo database mới tên: `laravel`
+
+*(Hoặc với Laragon: chuột phải vào icon Laragon → MySQL → tạo database `laravel`)*
+
+#### Bước 4: Cấu hình file `.env`
+
+Mở file `.env` và sửa phần database:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+> **Lưu ý:** XAMPP mặc định MySQL user là `root`, password trống. Nếu bạn đã đặt password thì sửa lại cho đúng.
+
+#### Bước 5: Chạy dự án
+
+```bash
+# Tạo application key
+php artisan key:generate
+
+# Chạy migrations (tạo bảng trong database)
+php artisan migrate
+
+# Khởi động server
+php artisan serve
+
+# Truy cập: http://localhost:8000
+```
+
+#### Các lệnh artisan thường dùng (không Docker)
+
+```bash
+php artisan serve              # Chạy server development
+php artisan migrate            # Chạy migrations
+php artisan migrate:rollback   # Hoàn tác migration
+php artisan make:model X -m    # Tạo model + migration
+php artisan make:controller X  # Tạo controller
+php artisan db:seed            # Điền dữ liệu mẫu
+php artisan tinker             # Mở PHP REPL
+php artisan test               # Chạy tests
+```
+
+---
+
+### So sánh nhanh 2 cách
+
+| | Docker (Sail) | XAMPP / Laragon |
+|---|---|---|
+| Cần cài | Docker Desktop (+ WSL2 trên Windows) | XAMPP/Laragon + Composer |
+| Lệnh chạy server | `sail up -d` | `php artisan serve` |
+| Lệnh artisan | `sail artisan ...` | `php artisan ...` |
+| Truy cập web | `http://localhost` | `http://localhost:8000` |
+| MySQL | Tự động chạy trong Docker | Bật trong XAMPP/Laragon |
+| Cấu hình DB | Không cần sửa `.env` | Phải sửa `.env` (host, user, pass) |
+| RAM sử dụng | ~1-2 GB | ~200-400 MB |
 
 ---
 
